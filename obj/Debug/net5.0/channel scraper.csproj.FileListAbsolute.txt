@@ -1,0 +1,24 @@
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\channel scraper.csprojAssemblyReference.cache
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\channel scraper.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\channel scraper.AssemblyInfoInputs.cache
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\channel scraper.AssemblyInfo.cs
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\channel scraper.csproj.CoreCompileInputs.cache
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\channel scraper.exe
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\channel scraper.deps.json
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\channel scraper.runtimeconfig.json
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\channel scraper.runtimeconfig.dev.json
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\channel scraper.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\ref\channel scraper.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\channel scraper.pdb
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\DSharpPlus.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\channel scraper.csproj.CopyComplete
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\channel scraper.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\ref\channel scraper.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\channel scraper.pdb
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\obj\Debug\net5.0\channel scraper.genruntimeconfig.cache
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\DSharpPlus.CommandsNext.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\Emzi0767.Common.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\smart\Documents\School\Java files\python garbage\c#\channel scraper\bin\Debug\net5.0\Microsoft.Extensions.Logging.Abstractions.dll
