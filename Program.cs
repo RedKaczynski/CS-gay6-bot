@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using System.Text.Json;
 
 namespace channel_scraper
 {
@@ -16,7 +17,7 @@ namespace channel_scraper
         {
             var discord = new DiscordClient(new DiscordConfiguration()
             {
-                Token = "Nzg3NTg4Mzc2MjExNjE5ODYy.X9XI1Q.Od8vIGqwfPUsTBb2snOSpfgLZnw",
+                Token = new Token().token,
                 TokenType = TokenType.Bot
             });
 
