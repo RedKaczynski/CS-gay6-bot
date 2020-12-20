@@ -1,26 +1,3 @@
-/*if (e.Message.Content.ToLower().StartsWith("--scrape")) {
-var channels = e.Message.Guild.Channels.AsEnumerable().Select(n => n.Value).Where(channel => channel.Type == ChannelType.Text).ToList();
-await e.Message.RespondAsync("Scraping...");
-var i = 0;
-foreach (DiscordChannel channel in channels)
-{
-    var currBefore = ctx.Message.Id;
-    var scrapedCount = 0;
-    while (true)
-    {
-        var messages = await channel.GetMessagesBeforeAsync(currBefore);
-        scrapedCount += messages.Count;
-        if (messages.Count == 0) break;
-        else currBefore = messages[messages.Count - 1].Id;
-        await db.Messages.AddRangeAsync(messages.AsEnumerable().Select(m =>
-            new Message { Id = m.Id, Author = GetDisplayName(m.Author), Content = m.Content, Channel = m.Channel.Name }));
-    }
-    await e.Message.RespondAsync($"✅ Scraped {scrapedCount} messages from {channel.Mention} (Channel {i + 1} of {channels.Count})");
-    await db.SaveChangesAsync();
-    await Task.Delay(1000);
-    i++;
-}
-await ctx.RespondAsync("✅ Finished");*/
 using System;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -31,11 +8,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.IO;
 
 public class CommandMod : BaseCommandModule
 {
-    Dictionary<long, string> authors = new Dictionary<long, string>();
-    [Command("scrape")]
+    private readonly Random _random = new Random(); 
+    public Dictionary<ulong, Author> authors = new Dictionary<ulong, Author>();
+
+    [Command("fullreset")]
     public async Task ScrapeCommand(CommandContext ctx)
     {
         var channels = ctx.Guild.Channels.AsEnumerable().Select(n => n.Value).Where(channel => channel.Type == ChannelType.Text).ToList();
@@ -48,21 +29,117 @@ public class CommandMod : BaseCommandModule
             var scrapedCount = 0;
             while (true)
             {
-                
                 var messages = await channel.GetMessagesBeforeAsync(currBefore);
                 scrapedCount += messages.Count;
                 if (messages.Count == 0) break;
                 else currBefore = messages[messages.Count - 1].Id;
                 Console.WriteLine(scrapedCount);
-                //Console.WriteLine(scrapedCount);
-                //await db.Messages.AddRangeAsync(messages.AsEnumerable().Select(m =>
-                //    new Message { Id = m.Id, Author = GetDisplayName(m.Author), Content = m.Content, Channel = m.Channel.Name }));
+                foreach (DiscordMessage message in messages){
+                    if (message.Author.IsBot == true) continue;
+                    try{
+                        authors[message.Author.Id].messages.Add(new Message(){
+                            Id = message.Id,
+                            Channel = message.Channel.Name,
+                            Time = message.Timestamp.ToUnixTimeMilliseconds(),
+                            Content = message.Content
+                        });
+                    } catch (Exception e){
+                        authors.Add(message.Author.Id, new Author()
+                        {
+                            Name = message.Author.Username,
+                            Discriminator = message.Author.Discriminator,
+                            Avatar = message.Author.AvatarUrl,
+                            MessageCount = 0,
+                            ActiveTime = 0,
+                            XP = 0,
+                            messages = new List<Message>()
+                        });
+                        authors[message.Author.Id].messages.Add(new Message(){
+                            Id = message.Id,
+                            Channel = message.Channel.Name,
+                            Time = message.Timestamp.ToUnixTimeMilliseconds(),
+                            Content = message.Content
+                        });
+                    }
+                }
             }
             await ctx.RespondAsync($"✅ Scraped {scrapedCount} messages from {channel.Mention} (Channel {i + 1} of {channels.Count})");
             //await db.SaveChangesAsync();
-            await Task.Delay(1000);
             i++;
         }
+        i = 0;
+        foreach (DiscordChannel channel in channels)
+        {
+            var currBefore = ctx.Message.Id;
+            var scrapedCount = 0;
+            var messages = await channel.GetMessagesAfterAsync(currBefore, 10000);
+            foreach (DiscordMessage message in messages){
+                if (message.Author.IsBot == true) continue;
+                try{
+                    authors[message.Author.Id].messages.Add(new Message(){
+                        Id = message.Id,
+                        Channel = message.Channel.Name,
+                        Time = message.Timestamp.ToUnixTimeMilliseconds(),
+                        Content = message.Content
+                    });
+                } catch (Exception e){
+                    authors.Add(message.Author.Id, new Author()
+                    {
+                        Name = message.Author.Username,
+                        Discriminator = message.Author.Discriminator,
+                        Avatar = message.Author.AvatarUrl,
+                        MessageCount = 0,
+                        ActiveTime = 0,
+                        XP = 0,
+                        messages = new List<Message>()
+                    });
+                    authors[message.Author.Id].messages.Add(new Message(){
+                        Id = message.Id,
+                        Channel = message.Channel.Name,
+                        Time = message.Timestamp.ToUnixTimeMilliseconds(),
+                        Content = message.Content
+                    });
+                }
+            }
+            await ctx.RespondAsync($"✅ Scraped the rest of the messages ({scrapedCount} messages) from {channel.Mention} (Channel {i + 1} of {channels.Count})");
+            i++;
+        }
+        await ctx.RespondAsync($"Calculating XP for {authors.Count} Users...");
+        foreach (Author user in authors.Values)
+        {
+            var messages = user.messages.OrderBy(x => x.Time);
+            long Last = 0;
+            foreach (Message m in messages)
+            {
+                user.MessageCount++;
+                if(m.Time > Last + 60000){
+                    user.ActiveTime++;
+                    user.XP += _random.Next(20, 25);
+                }
+            }
+        }
+
+        await ctx.RespondAsync("Saving messages to file...");
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true
+        };
+        using FileStream createStream = File.Create($"./Storage/{ctx.Guild.Id}.json");
+
+        Dictionary<ulong, Author> s = authors.OrderBy(key => key.Value.XP).Reverse().ToDictionary(x => x.Key, x => x.Value);
+
+        await JsonSerializer.SerializeAsync(createStream, s, options);
+        
         await ctx.RespondAsync("✅ Finished");
+        channel_scraper.Program.setTimer(ctx.Guild.Id);
+    }
+    [Command("kill")]
+    public async Task End(CommandContext ctx){
+        System.Environment.Exit(0);
+    }
+    [Command("start")]
+    public async Task Start(CommandContext ctx){
+        Console.Write("started");
+        channel_scraper.Program.setTimer(ctx.Guild.Id);
     }
 }
